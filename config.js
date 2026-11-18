@@ -7,8 +7,12 @@ window.SITE = {
   // WhatsApp ordering numbers (country code, no +). Both are used for orders.
   whatsapp: ["254707073011", "254797770150"],
   displayPhones: ["0707 073 011", "0797 770 150"],
-  // Social links: leave blank to hide. Send us your handles and we'll fill these in.
+  // Social links: leave blank to hide.
   social: { instagram: "", tiktok: "", facebook: "", x: "" },
-  // Showing international customers: the currency is shown on each price.
-  currency: "KES"
+  currency: "KES",
+  sizes: ["S", "M", "L", "XL", "XXL"],
+  // Supabase (from the SOULWEAR project: Project Settings > API).
+  // Leave as placeholders until the project is set up; the site then uses products.json.
+  SUPABASE_URL: "",
+  SUPABASE_ANON_KEY: ""
 };

@@ -25,9 +25,10 @@
     : `<p class="muted small">Social media links will appear here.</p>`;
 
   function productCard(p) {
-    const first = p.variants && p.variants[0];
-    const img = first ? `<img src="${esc(first.image)}" alt="${esc(p.name)} in ${esc(first.colour)}" loading="lazy">` : "";
-    const colours = (p.variants || []).map((v) => v.colour);
+    const variants = p.variants || [];
+    const first = variants[0];
+    const img = first && first.image ? `<img src="${esc(first.image)}" alt="${esc(p.name)} in ${esc(first.colour)}" loading="lazy">` : "";
+    const sizes = (p.sizes && p.sizes.length ? p.sizes : S.sizes);
     const orderText = `Hello SOULWEAR, I'd like to order the ${p.name}. Colour: `;
     return `
       <article class="card" data-id="${esc(p.id)}">
@@ -36,31 +37,51 @@
           <h3>${esc(p.name)}</h3>
           <p class="muted small">${esc(p.description || "")}</p>
           <div class="meta"><span class="price">${esc(priceText(p))}</span><span class="stock">${esc(stockText(p))}</span></div>
-          ${colours.length ? `<div class="swatches">${(p.variants || []).map((v, i) =>
-            `<button class="swatch" type="button" data-img="${esc(v.image)}" data-alt="${esc(p.name)} in ${esc(v.colour)}" data-colour="${esc(v.colour)}" aria-label="${esc(v.colour)}" title="${esc(v.colour)}" ${i === 0 ? "aria-pressed=\"true\"" : ""}></button>`).join("")}</div>
-          <p class="muted small">Colour: <span class="colour-name">${esc(colours[0] || "")}</span></p>` : ""}
-          <div class="sizes">${(window.PRODUCTS.sizes || []).map((s) => `<span>${esc(s)}</span>`).join("")}</div>
-          <a class="btn small order-btn" data-base="${esc(orderText)}" href="${waLink(S.whatsapp[0], orderText + (colours[0] || ""))}" target="_blank" rel="noopener">Order on WhatsApp</a>
+          ${variants.length ? `<div class="swatches">${variants.map((v, i) =>
+            `<button class="swatch" type="button" data-img="${esc(v.image)}" data-alt="${esc(p.name)} in ${esc(v.colour)}" data-colour="${esc(v.colour)}" aria-label="${esc(v.colour)}" title="${esc(v.colour)}" aria-pressed="${i === 0}"></button>`).join("")}</div>
+          <p class="muted small">Colour: <span class="colour-name">${esc(variants[0].colour)}</span></p>` : ""}
+          <div class="sizes">${sizes.map((s) => `<span>${esc(s)}</span>`).join("")}</div>
+          <a class="btn small order-btn" data-base="${esc(orderText)}" href="${waLink(S.whatsapp[0], orderText + (variants[0] ? variants[0].colour : ""))}" target="_blank" rel="noopener">Order on WhatsApp</a>
         </div>
       </article>`;
   }
 
-  fetch("products.json", { cache: "no-cache" })
-    .then((r) => r.json())
-    .then((data) => {
-      window.PRODUCTS = data;
-      const list = data.products || [];
-      const hoodies = list.filter((p) => p.category === "hoodies");
-      const all = list;
-      const html = (items) => items.map(productCard).join("") || `<p class="muted">Coming soon.</p>`;
-      $("#products").innerHTML = html(all);
-      document.querySelectorAll("[data-cat]").forEach((el) => {
-        const cat = el.dataset.cat;
-        const items = list.filter((p) => p.category === cat);
-        if (items.length) el.innerHTML = html(items);
-      });
-      bindSwatches();
-    })
+  // Map a database row (or products.json entry) to one shape
+  function normalise(r) {
+    return {
+      id: r.id, category: r.category, name: r.name, description: r.description,
+      price: r.price == null ? null : Number(r.price),
+      stock: r.stock == null ? null : Number(r.stock),
+      sizes: r.sizes || [],
+      variants: (r.variants || []).filter((v) => v && v.image),
+    };
+  }
+
+  async function loadList() {
+    const configured = S.SUPABASE_URL && S.SUPABASE_ANON_KEY && window.supabase;
+    if (configured) {
+      const db = window.supabase.createClient(S.SUPABASE_URL, S.SUPABASE_ANON_KEY);
+      const { data, error } = await db.from("products").select("*").eq("active", true).order("sort").order("created_at");
+      if (error) throw error;
+      return data.map(normalise);
+    }
+    const res = await fetch("products.json", { cache: "no-cache" });
+    const json = await res.json();
+    return (json.products || []).map(normalise);
+  }
+
+  function render(list) {
+    const html = (items) => items.map(productCard).join("") || `<p class="muted">Coming soon.</p>`;
+    $("#products").innerHTML = html(list);
+    document.querySelectorAll("[data-cat]").forEach((el) => {
+      const items = list.filter((p) => p.category === el.dataset.cat);
+      if (items.length) el.innerHTML = html(items);
+    });
+    bindSwatches();
+  }
+
+  loadList()
+    .then(render)
     .catch(() => {
       $("#products").innerHTML = `<p class="muted">Products are loading. If this stays empty, please order on WhatsApp.</p>`;
     });

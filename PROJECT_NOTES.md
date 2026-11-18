@@ -29,3 +29,9 @@
 ## Done
 - Site built and pushed (home, shop, collections, about, identity, WhatsApp orders, social)
 - Hoodie photos from the supplied image (brown, white, grey)
+
+## Admin portal (added)
+- admin.html: private product manager (add, edit, hide, delete, upload photos per colour).
+- Products are stored in a separate Supabase project for SOULWEAR (not Bremoh's). Schema: supabase/schema.sql.
+- Setup needed: create the SOULWEAR Supabase project, run schema.sql, create the admin user, add its id to admins, then put URL and anon key in config.js.
+- Until then the site shows products from products.json and the admin says it is not connected.

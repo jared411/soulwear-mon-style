@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin | SOULWEAR MON STYLE</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin">
+
+<div id="login" class="login-box">
+  <img src="assets/logo.png" alt="SOULWEAR" class="login-logo">
+  <h2 class="display">Admin</h2>
+  <form id="login-form">
+    <label for="l-email">Email</label><input id="l-email" type="email" required autocomplete="username">
+    <label for="l-pass">Password</label><input id="l-pass" type="password" required autocomplete="current-password">
+    <button class="btn" style="width:100%;margin-top:18px">Sign in</button>
+    <div id="login-msg" class="msg"></div>
+  </form>
+</div>
+
+<div id="dash" class="hidden">
+  <header class="top">
+    <div class="wrap bar">
+      <a href="index.html" class="brand"><img src="assets/logo.png" alt="SOULWEAR"></a>
+      <div class="bar-right">
+        <a href="index.html" class="btn ghost small" target="_blank" rel="noopener">View site</a>
+        <button id="logout" class="btn small" type="button">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap admin-wrap">
+    <div class="toolbar">
+      <h1 class="display">Products</h1>
+      <button id="new-product" class="btn small" type="button">Add product</button>
+    </div>
+
+    <form id="product-form" class="panel hidden">
+      <h2 id="pf-title" class="display small-title">Add product</h2>
+      <input type="hidden" id="pf-id">
+
+      <div class="row">
+        <div><label for="pf-name">Name</label><input id="pf-name" required maxlength="80"></div>
+        <div><label for="pf-category">Category</label>
+          <select id="pf-category">
+            <option value="hoodies">Hoodies</option>
+            <option value="tshirts">T-shirts</option>
+            <option value="jerseys">Jerseys</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="pf-desc">Description</label>
+      <textarea id="pf-desc" rows="3" maxlength="500"></textarea>
+
+      <div class="row">
+        <div><label for="pf-price">Price (KES) <span class="muted small">leave empty for "Price on WhatsApp"</span></label>
+          <input id="pf-price" type="number" min="0" step="1"></div>
+        <div><label for="pf-stock">Stock <span class="muted small">leave empty for "Check availability"</span></label>
+          <input id="pf-stock" type="number" min="0" step="1"></div>
+      </div>
+
+      <label for="pf-sizes">Sizes <span class="muted small">comma separated</span></label>
+      <input id="pf-sizes" value="S, M, L, XL, XXL">
+
+      <label>Colours and photos</label>
+      <div id="variants"></div>
+      <button type="button" id="add-variant" class="btn ghost small" style="margin-top:10px">+ Add colour</button>
+
+      <div class="row" style="margin-top:14px">
+        <div><label for="pf-sort">Display order <span class="muted small">lower shows first</span></label>
+          <input id="pf-sort" type="number" value="0" step="1"></div>
+        <div style="display:flex;align-items:end">
+          <label class="check"><input id="pf-active" type="checkbox" checked> Show on the website</label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn" id="pf-save">Save product</button>
+        <button type="button" id="pf-cancel" class="btn ghost">Cancel</button>
+      </div>
+      <div id="pf-msg" class="msg"></div>
+    </form>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Shown</th><th></th></tr></thead>
+        <tbody id="products-body"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
