@@ -14,7 +14,7 @@
       "name": "SOULWEAR Hoodie",
       "description": "Heavyweight hoodie with the SOULWEAR crest embroidered on the chest and a gold-tipped drawstring.",
       "price": 3500,
-      "stock": null,
+      "stock": 3,
       "sizes": [],
       "variants": [
         {
