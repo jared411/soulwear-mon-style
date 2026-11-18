@@ -32,6 +32,29 @@
       ],
       "active": true,
       "sort": 5
+    },
+    {
+      "id": "9896ea02-0185-4a31-b19b-b911aab55588",
+      "category": "hoodies",
+      "name": "GREY HOOD",
+      "description": "",
+      "price": 3000,
+      "stock": null,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "variants": [
+        {
+          "colour": "GREY",
+          "image": "assets/products/9896ea02-0185-4a31-b19b-b911aab55588/1795010361812-8179a8.jpg"
+        }
+      ],
+      "active": true,
+      "sort": 1
     }
   ]
 }
