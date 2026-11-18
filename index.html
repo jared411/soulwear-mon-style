@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOULWEAR MON STYLE | YOU GOT IT WE GOT IT</title>
+<meta name="description" content="SOULWEAR MON STYLE: premium streetwear hoodies, T-shirts and jerseys. Est. 21. Order on WhatsApp.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="top" id="top">
+  <div class="wrap bar">
+    <a href="#top" class="brand" aria-label="SOULWEAR home"><img src="assets/logo.png" alt="SOULWEAR"></a>
+    <nav class="menu" aria-label="Main">
+      <a href="#shop">Shop</a>
+      <a href="#collections">Collections</a>
+      <a href="#about">About</a>
+      <a href="#identity">Identity</a>
+      <a href="#order">Order</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <p class="eyebrow">SOULWEAR MON STYLE</p>
+    <h1 class="display">YOU GOT IT<br><span class="gold">WE GOT IT</span></h1>
+    <p class="lead">Premium streetwear for people who lead their own style. Hoodies, T-shirts and jerseys, made to last.</p>
+    <div class="cta">
+      <a class="btn" href="#shop">Shop the collection</a>
+      <a class="btn ghost" href="#order">Order on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<section id="shop" class="block">
+  <div class="wrap">
+    <div class="heading">
+      <p class="eyebrow">The shop</p>
+      <h2 class="display">Available now</h2>
+      <p class="muted">Choose a product, pick a size, and order on WhatsApp.</p>
+    </div>
+    <div id="products" class="grid" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="collections" class="block alt">
+  <div class="wrap">
+    <div class="heading">
+      <p class="eyebrow">Collections</p>
+      <h2 class="display">Hoodies. T-shirts. Jerseys.</h2>
+    </div>
+    <div class="cats">
+      <a href="#hoodies" class="cat"><span>Hoodies</span></a>
+      <a href="#tshirts" class="cat"><span>T-shirts</span></a>
+      <a href="#jerseys" class="cat"><span>Jerseys</span></a>
+    </div>
+    <div id="hoodies" class="cat-block">
+      <h3 class="cat-title">Hoodies</h3>
+      <div class="grid" data-cat="hoodies"></div>
+    </div>
+    <div id="tshirts" class="cat-block">
+      <h3 class="cat-title">T-shirts</h3>
+      <div class="grid" data-cat="tshirts"><p class="muted">New T-shirts are coming soon.</p></div>
+    </div>
+    <div id="jerseys" class="cat-block">
+      <h3 class="cat-title">Jerseys</h3>
+      <div class="grid" data-cat="jerseys"><p class="muted">New jerseys are coming soon.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="block">
+  <div class="wrap about">
+    <div>
+      <p class="eyebrow">About us</p>
+      <h2 class="display">Our story</h2>
+      <p class="muted">SOULWEAR MON STYLE started in 2021 (EST.21) with one idea: clothes should make you feel like yourself. We design streetwear that is bold, comfortable and built to last.</p>
+      <p class="muted">Our vision is simple: a confident brand with its own identity, from Nairobi to customers around the world.</p>
+    </div>
+    <div class="stat-row">
+      <div><strong>EST.21</strong><span>Founded</span></div>
+      <div><strong>KE</strong><span>Based in Kenya</span></div>
+      <div><strong>WORLD</strong><span>Shipping ambition</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="identity" class="block alt">
+  <div class="wrap identity">
+    <div class="logo-card">
+      <img src="assets/logo.png" alt="SOULWEAR crest and wordmark">
+    </div>
+    <div>
+      <p class="eyebrow">Brand identity</p>
+      <h2 class="display">The crest</h2>
+      <p class="muted">The SOULWEAR crest is the mark of the brand. Use it as it is, without changing its shape, colour or lettering.</p>
+      <p class="slogan">YOU GOT IT WE GOT IT</p>
+      <p class="muted small">Established 21 (EST.21)</p>
+    </div>
+  </div>
+</section>
+
+<section id="order" class="block">
+  <div class="wrap">
+    <div class="heading">
+      <p class="eyebrow">Contact and orders</p>
+      <h2 class="display">Order on WhatsApp</h2>
+      <p class="muted">Tap a number to chat with us. Tell us the product, colour and size you want.</p>
+    </div>
+    <div class="contact-grid" id="contact-links"></div>
+    <p class="muted small center">Shipping outside Kenya is available on request.</p>
+  </div>
+</section>
+
+<section id="social" class="block alt">
+  <div class="wrap center">
+    <p class="eyebrow">Follow us</p>
+    <div class="social" id="social-links"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap center">
+    <img src="assets/logo.png" alt="" class="foot-logo">
+    <p>&copy; <span id="yr"></span> SOULWEAR MON STYLE. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
