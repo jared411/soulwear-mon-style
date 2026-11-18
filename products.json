@@ -55,6 +55,29 @@
       ],
       "active": true,
       "sort": 1
+    },
+    {
+      "id": "e1cd9e55-4bdf-4f1e-90de-4c3cda4795e5",
+      "category": "hoodies",
+      "name": "SOULWEAR HOODIE",
+      "description": "",
+      "price": null,
+      "stock": 1,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "variants": [
+        {
+          "colour": "GREY",
+          "image": "assets/products/e1cd9e55-4bdf-4f1e-90de-4c3cda4795e5/1795010701396-f7e25e.jpg"
+        }
+      ],
+      "active": true,
+      "sort": 0
     }
   ]
 }
