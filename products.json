@@ -61,7 +61,7 @@
       "category": "hoodies",
       "name": "SOULWEAR HOODIE",
       "description": "",
-      "price": null,
+      "price": 2500,
       "stock": 1,
       "sizes": [
         "S",
@@ -77,7 +77,7 @@
         }
       ],
       "active": true,
-      "sort": 0
+      "sort": 2
     }
   ]
 }
