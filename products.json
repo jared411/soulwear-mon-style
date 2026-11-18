@@ -39,7 +39,7 @@
       "name": "GREY HOOD",
       "description": "",
       "price": 3000,
-      "stock": null,
+      "stock": 2,
       "sizes": [
         "S",
         "M",
