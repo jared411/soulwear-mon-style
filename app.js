@@ -58,16 +58,9 @@
   }
 
   async function loadList() {
-    const configured = S.SUPABASE_URL && S.SUPABASE_ANON_KEY && window.supabase;
-    if (configured) {
-      const db = window.supabase.createClient(S.SUPABASE_URL, S.SUPABASE_ANON_KEY);
-      const { data, error } = await db.from("products").select("*").eq("active", true).order("sort").order("created_at");
-      if (error) throw error;
-      return data.map(normalise);
-    }
     const res = await fetch("products.json", { cache: "no-cache" });
     const json = await res.json();
-    return (json.products || []).map(normalise);
+    return (json.products || []).filter((p) => p.active !== false).map(normalise);
   }
 
   function render(list) {

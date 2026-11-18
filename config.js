@@ -10,9 +10,5 @@ window.SITE = {
   // Social links: leave blank to hide.
   social: { instagram: "", tiktok: "", facebook: "", x: "" },
   currency: "KES",
-  sizes: ["S", "M", "L", "XL", "XXL"],
-  // Supabase (from the SOULWEAR project: Project Settings > API).
-  // Leave as placeholders until the project is set up; the site then uses products.json.
-  SUPABASE_URL: "",
-  SUPABASE_ANON_KEY: ""
+  sizes: ["S", "M", "L", "XL", "XXL"]
 };

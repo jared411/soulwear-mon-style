@@ -3,25 +3,37 @@
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const flash = (el, ok, text) => { el.className = "msg " + (ok ? "ok" : "err"); el.textContent = text; };
-  const configured = C.SUPABASE_URL && C.SUPABASE_ANON_KEY && window.supabase;
 
-  if (!configured) {
-    document.getElementById("login").innerHTML = '<p class="center muted">The admin is not connected yet. Add the SOULWEAR Supabase URL and key to config.js.</p>';
-    return;
-  }
-  const db = window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY);
   let products = [];
+  let meta = { currency: "KES", sizes: C.sizes };
+
+  // Small wrapper around the admin API
+  async function api(path, options = {}) {
+    const opts = { credentials: "same-origin", ...options };
+    if (opts.body && typeof opts.body !== "string") {
+      opts.body = JSON.stringify(opts.body);
+      opts.headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
+    }
+    const res = await fetch("/api/" + path, opts);
+    let data = null;
+    try { data = await res.json(); } catch (e) {}
+    if (!res.ok) {
+      const err = new Error((data && data.error) || "Something went wrong");
+      err.status = res.status;
+      throw err;
+    }
+    return data;
+  }
+  // Any call that comes back "not signed in" returns you to the login screen
+  async function call(path, options) {
+    try { return await api(path, options); }
+    catch (err) { if (err.status === 401) showLogin(); throw err; }
+  }
 
   // ---------- Login ----------
   async function checkSession() {
-    const { data: { session } } = await db.auth.getSession();
-    if (!session) return showLogin();
-    const { data } = await db.from("admins").select("user_id").eq("user_id", session.user.id).maybeSingle();
-    if (!data) {
-      await db.auth.signOut();
-      flash($("login-msg"), false, "This account is not an admin.");
-      return showLogin();
-    }
+    try { await api("me"); }
+    catch (e) { return showLogin(); }
     $("login").classList.add("hidden");
     $("dash").classList.remove("hidden");
     loadProducts();
@@ -30,12 +42,17 @@
 
   $("login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const { error } = await db.auth.signInWithPassword({ email: $("l-email").value.trim(), password: $("l-pass").value });
-    if (error) return flash($("login-msg"), false, "Incorrect email or password.");
-    $("l-pass").value = "";
-    checkSession();
+    try {
+      await api("login", { method: "POST", body: { password: $("l-pass").value } });
+      $("l-pass").value = "";
+      $("login-msg").className = "msg";
+      checkSession();
+    } catch (err) { flash($("login-msg"), false, err.message); }
   });
-  $("logout").addEventListener("click", async () => { await db.auth.signOut(); showLogin(); });
+  $("logout").addEventListener("click", async () => {
+    try { await api("logout", { method: "POST", body: {} }); } catch (e) {}
+    showLogin();
+  });
 
   // ---------- Photos: shrink in the browser, then upload ----------
   function shrink(file, maxSide = 1200, quality = 0.85) {
@@ -51,18 +68,16 @@
         ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
         ctx.drawImage(img, 0, 0, c.width, c.height);
         URL.revokeObjectURL(url);
-        c.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not read that photo"))), "image/jpeg", quality);
+        resolve(c.toDataURL("image/jpeg", quality).split(",")[1]);
       };
-      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Could not read that photo")); };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Could not read that photo. Try a JPG or PNG.")); };
       img.src = url;
     });
   }
   async function uploadPhoto(productId, file) {
-    const blob = await shrink(file);
-    const path = `${productId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
-    const { error } = await db.storage.from("products").upload(path, blob, { contentType: "image/jpeg", cacheControl: "31536000" });
-    if (error) throw error;
-    return db.storage.from("products").getPublicUrl(path).data.publicUrl;
+    const data = await shrink(file);
+    const res = await call("upload", { method: "POST", body: { productId, data } });
+    return res.path;
   }
 
   // ---------- Colour rows ----------
@@ -84,11 +99,22 @@
   }
   $("add-variant").addEventListener("click", () => variantRow());
 
+  // ---------- Save the whole list ----------
+  async function saveList(list) {
+    await call("products", { method: "PUT", body: { products: list } });
+    products = list;
+  }
+
   // ---------- Product list ----------
   async function loadProducts() {
-    const { data, error } = await db.from("products").select("*").order("sort").order("created_at");
-    if (error) { $("products-body").innerHTML = `<tr><td colspan="6">Could not load products: ${esc(error.message)}</td></tr>`; return; }
-    products = data || [];
+    try {
+      const data = await call("products");
+      products = data.products || [];
+      meta = { currency: data.currency || "KES", sizes: data.sizes || C.sizes };
+    } catch (err) {
+      $("products-body").innerHTML = `<tr><td colspan="6">Could not load products: ${esc(err.message)}</td></tr>`;
+      return;
+    }
     if (!products.length) { $("products-body").innerHTML = `<tr><td colspan="6">No products yet. Tap "Add product".</td></tr>`; return; }
     const cat = { hoodies: "Hoodies", tshirts: "T-shirts", jerseys: "Jerseys" };
     $("products-body").innerHTML = products.map((p) => {
@@ -113,13 +139,13 @@
     try {
       if (t.dataset.edit) openForm(products.find((p) => p.id === t.dataset.edit));
       else if (t.dataset.toggle) {
-        const p = products.find((x) => x.id === t.dataset.toggle);
-        await db.from("products").update({ active: !p.active }).eq("id", p.id);
+        const next = products.map((p) => (p.id === t.dataset.toggle ? { ...p, active: !p.active } : p));
+        await saveList(next);
         loadProducts();
       } else if (t.dataset.del) {
         const p = products.find((x) => x.id === t.dataset.del);
         if (confirm(`Delete "${p.name}"? This cannot be undone.`)) {
-          await db.from("products").delete().eq("id", p.id);
+          await saveList(products.filter((x) => x.id !== p.id));
           loadProducts();
         }
       }
@@ -146,7 +172,7 @@
     } else {
       $("pf-title").textContent = "Add product";
       $("pf-id").value = "";
-      $("pf-sizes").value = C.sizes.join(", ");
+      $("pf-sizes").value = (meta.sizes || C.sizes).join(", ");
       $("pf-active").checked = true;
       variantRow();
     }
@@ -166,29 +192,14 @@
       const rows = [...$("variants").querySelectorAll(".variant")];
       if (!rows.length) throw new Error("Add at least one colour with a photo.");
 
-      let id = $("pf-id").value;
       const priceRaw = $("pf-price").value.trim();
       const stockRaw = $("pf-stock").value.trim();
-      const row = {
-        category: $("pf-category").value,
-        name: $("pf-name").value.trim(),
-        description: $("pf-desc").value.trim(),
-        price: priceRaw === "" ? null : Number(priceRaw),
-        stock: stockRaw === "" ? null : parseInt(stockRaw, 10),
-        sizes: $("pf-sizes").value.split(",").map((s) => s.trim()).filter(Boolean),
-        sort: parseInt($("pf-sort").value || "0", 10),
-        active: $("pf-active").checked,
-      };
-      if (row.price !== null && (isNaN(row.price) || row.price < 0)) throw new Error("Enter a valid price.");
-      if (row.stock !== null && (isNaN(row.stock) || row.stock < 0)) throw new Error("Enter a valid stock number.");
+      const price = priceRaw === "" ? null : Number(priceRaw);
+      const stock = stockRaw === "" ? null : parseInt(stockRaw, 10);
+      if (price !== null && (isNaN(price) || price < 0)) throw new Error("Enter a valid price.");
+      if (stock !== null && (isNaN(stock) || stock < 0)) throw new Error("Enter a valid stock number.");
 
-      // New product first, so its photos get a folder with its id
-      if (!id) {
-        const { data, error } = await db.from("products").insert({ ...row, variants: [] }).select("id").single();
-        if (error) throw error;
-        id = data.id;
-      }
-
+      const id = $("pf-id").value || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
       const variants = [];
       for (const r of rows) {
         const colour = r.querySelector(".v-colour").value.trim();
@@ -196,17 +207,30 @@
         let image = r.querySelector(".v-image").value;
         if (file) {
           msg.className = "msg ok";
-          msg.textContent = `Uploading ${colour} photo...`;
+          msg.textContent = `Uploading ${colour || "colour"} photo...`;
           image = await uploadPhoto(id, file);
         }
         if (!colour || !image) throw new Error("Each colour needs a name and a photo.");
         variants.push({ colour, image });
       }
 
-      const { error } = await db.from("products").update({ ...row, variants }).eq("id", id);
-      if (error) throw error;
+      const product = {
+        id,
+        category: $("pf-category").value,
+        name: $("pf-name").value.trim(),
+        description: $("pf-desc").value.trim(),
+        price,
+        stock,
+        sizes: $("pf-sizes").value.split(",").map((s) => s.trim()).filter(Boolean),
+        variants,
+        active: $("pf-active").checked,
+        sort: parseInt($("pf-sort").value || "0", 10),
+      };
+      const exists = products.some((p) => p.id === id);
+      const next = exists ? products.map((p) => (p.id === id ? product : p)) : [...products, product];
+      await saveList(next);
 
-      flash(msg, true, "Saved. The website shows the change within a minute.");
+      flash(msg, true, "Saved. The website updates in about a minute.");
       loadProducts();
       setTimeout(() => $("product-form").classList.add("hidden"), 900);
     } catch (err) {

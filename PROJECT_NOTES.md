@@ -30,8 +30,7 @@
 - Site built and pushed (home, shop, collections, about, identity, WhatsApp orders, social)
 - Hoodie photos from the supplied image (brown, white, grey)
 
-## Admin portal (added)
+## Admin portal (added, replaces the Supabase plan)
 - admin.html: private product manager (add, edit, hide, delete, upload photos per colour).
-- Products are stored in a separate Supabase project for SOULWEAR (not Bremoh's). Schema: supabase/schema.sql.
-- Setup needed: create the SOULWEAR Supabase project, run schema.sql, create the admin user, add its id to admins, then put URL and anon key in config.js.
-- Until then the site shows products from products.json and the admin says it is not connected.
+- No database. Supabase could not be used (free project limit). Products are saved to products.json through Vercel functions in api/, and photos go to assets/products.
+- Setup: see README.md (Vercel project, GitHub token, environment variables).
