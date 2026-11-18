@@ -49,11 +49,11 @@
       ],
       "variants": [
         {
-          "colour": "GREY",
-          "image": "assets/products/9896ea02-0185-4a31-b19b-b911aab55588/1795010361812-8179a8.jpg"
+          "colour": "WHITE",
+          "image": "assets/products/9896ea02-0185-4a31-b19b-b911aab55588/1795010505223-a49b0a.jpg"
         }
       ],
-      "active": true,
+      "active": false,
       "sort": 1
     }
   ]
