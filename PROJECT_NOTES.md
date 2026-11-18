@@ -34,3 +34,9 @@
 - admin.html: private product manager (add, edit, hide, delete, upload photos per colour).
 - No database. Supabase could not be used (free project limit). Products are saved to products.json through Vercel functions in api/, and photos go to assets/products.
 - Setup: see README.md (Vercel project, GitHub token, environment variables).
+
+## Cart and categories (added)
+- Shop has All / Hoodies / T-shirts / Jerseys buttons; the Collections tiles jump to the shop with that category selected.
+- Each product needs a size chosen before "Add to cart". The cart is saved on the customer's device.
+- Checkout opens WhatsApp with the whole order listed and a total. Items with no price are marked "to confirm".
+- Logo goes to the home page; refreshing or loading the page always starts at the top.

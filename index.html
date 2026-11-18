@@ -16,7 +16,7 @@
 
 <header class="top" id="top">
   <div class="wrap bar">
-    <a href="#top" class="brand" aria-label="SOULWEAR home"><img src="assets/logo.png" alt="SOULWEAR"></a>
+    <a href="index.html" class="brand" aria-label="SOULWEAR home"><img src="assets/logo.png" alt="SOULWEAR"></a>
     <nav class="menu" aria-label="Main">
       <a href="#shop">Shop</a>
       <a href="#collections">Collections</a>
@@ -24,6 +24,7 @@
       <a href="#identity">Identity</a>
       <a href="#order">Order</a>
     </nav>
+    <button id="cart-open" class="cart-btn" type="button" aria-label="Open cart">Cart <span id="cart-count">0</span></button>
   </div>
 </header>
 
@@ -44,7 +45,13 @@
     <div class="heading">
       <p class="eyebrow">The shop</p>
       <h2 class="display">Available now</h2>
-      <p class="muted">Choose a product, pick a size, and order on WhatsApp.</p>
+      <p class="muted">Pick a colour and size, then add to your cart. Check out with all your items at once on WhatsApp.</p>
+    </div>
+    <div class="filters" role="tablist" aria-label="Browse by category">
+      <button class="filter-btn is-on" data-filter="all" type="button">All</button>
+      <button class="filter-btn" data-filter="hoodies" type="button">Hoodies</button>
+      <button class="filter-btn" data-filter="tshirts" type="button">T-shirts</button>
+      <button class="filter-btn" data-filter="jerseys" type="button">Jerseys</button>
     </div>
     <div id="products" class="grid" aria-live="polite"></div>
   </div>
@@ -57,21 +64,9 @@
       <h2 class="display">Hoodies. T-shirts. Jerseys.</h2>
     </div>
     <div class="cats">
-      <a href="#hoodies" class="cat"><span>Hoodies</span></a>
-      <a href="#tshirts" class="cat"><span>T-shirts</span></a>
-      <a href="#jerseys" class="cat"><span>Jerseys</span></a>
-    </div>
-    <div id="hoodies" class="cat-block">
-      <h3 class="cat-title">Hoodies</h3>
-      <div class="grid" data-cat="hoodies"></div>
-    </div>
-    <div id="tshirts" class="cat-block">
-      <h3 class="cat-title">T-shirts</h3>
-      <div class="grid" data-cat="tshirts"><p class="muted">New T-shirts are coming soon.</p></div>
-    </div>
-    <div id="jerseys" class="cat-block">
-      <h3 class="cat-title">Jerseys</h3>
-      <div class="grid" data-cat="jerseys"><p class="muted">New jerseys are coming soon.</p></div>
+      <button class="cat" data-filter="hoodies" type="button"><span>Hoodies</span></button>
+      <button class="cat" data-filter="tshirts" type="button"><span>T-shirts</span></button>
+      <button class="cat" data-filter="jerseys" type="button"><span>Jerseys</span></button>
     </div>
   </div>
 </section>
@@ -132,6 +127,32 @@
     <p>&copy; <span id="yr"></span> SOULWEAR MON STYLE. All rights reserved.</p>
   </div>
 </footer>
+
+<!-- Cart -->
+<div id="cart-overlay" class="overlay hidden"></div>
+<aside id="cart-drawer" class="drawer hidden" aria-label="Your cart">
+  <div class="drawer-head">
+    <h3 class="display">Your cart</h3>
+    <button id="cart-close" class="btn ghost small" type="button">Close</button>
+  </div>
+  <div id="cart-items"></div>
+  <div class="cart-total"><span>Total</span><strong id="cart-total">KES 0</strong></div>
+  <p class="muted small" id="cart-note"></p>
+  <div id="cart-checkout" class="checkout">
+    <p class="small">Choose a number to send your order on WhatsApp:</p>
+    <div id="checkout-links"></div>
+    <button id="cart-clear" class="link-btn" type="button">Clear cart</button>
+  </div>
+</aside>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<nav class="mobile-bar" aria-label="Quick links">
+  <a href="#shop">Shop</a>
+  <a href="#collections">Collections</a>
+  <a href="#order">Order</a>
+  <a href="#about">About</a>
+</nav>
 
 <script src="config.js"></script>
 <script src="app.js"></script>
