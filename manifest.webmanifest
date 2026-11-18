@@ -1,0 +1,15 @@
+{
+  "name": "SOULWEAR MON STYLE",
+  "short_name": "SOULWEAR",
+  "description": "Premium streetwear hoodies, T-shirts and jerseys. Order on WhatsApp.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
