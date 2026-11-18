@@ -1,19 +1,37 @@
 {
   "currency": "KES",
-  "sizes": ["S", "M", "L", "XL", "XXL"],
+  "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL"
+  ],
   "products": [
     {
       "id": "hoodie-soul",
       "category": "hoodies",
       "name": "SOULWEAR Hoodie",
       "description": "Heavyweight hoodie with the SOULWEAR crest embroidered on the chest and a gold-tipped drawstring.",
-      "price": null,
+      "price": 3500,
       "stock": null,
+      "sizes": [],
       "variants": [
-        { "colour": "Brown", "image": "assets/hoodie-brown.jpg" },
-        { "colour": "White", "image": "assets/hoodie-white.jpg" },
-        { "colour": "Grey", "image": "assets/hoodie-grey.jpg" }
-      ]
+        {
+          "colour": "Brown",
+          "image": "assets/hoodie-brown.jpg"
+        },
+        {
+          "colour": "White",
+          "image": "assets/hoodie-white.jpg"
+        },
+        {
+          "colour": "Grey",
+          "image": "assets/hoodie-grey.jpg"
+        }
+      ],
+      "active": true,
+      "sort": 5
     }
   ]
 }
