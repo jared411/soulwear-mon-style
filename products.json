@@ -78,6 +78,29 @@
       ],
       "active": true,
       "sort": 2
+    },
+    {
+      "id": "9891e20d-adbb-4725-9a55-a607a97909ec",
+      "category": "jerseys",
+      "name": "Jersey",
+      "description": "",
+      "price": 1250,
+      "stock": 3,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "variants": [
+        {
+          "colour": "Black",
+          "image": "assets/products/9891e20d-adbb-4725-9a55-a607a97909ec/1795340458186-e59cd9.jpg"
+        }
+      ],
+      "active": true,
+      "sort": 0
     }
   ]
 }
